@@ -1,90 +1,34 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-var ObjectId = Schema.ObjectId
 
 
-//Auth Model
-const auth = new Schema({
-    email: {
-        type: String,
-        trim: true,
-        // unique: true,
-        lowercase: true
-    },
-    name: {
-        type: String,
-    },
-    password: {
-        type: String,
-    },
-    image: {
-        type: String,
-    },
-    accountdetails: {
-        type: Array,
-    },
-    backedCampaigns: {
-        type: Array,
-    },
-    date: {
-        type: String,
-        default: new Date()
-    }
-})
-
-const authSchema = mongoose.model('auths', auth);
-
-
-const campaign = new Schema({
-    by_who: {
-        type: ObjectId,
-        required: true,
-        trim: true
-    },
+const auctions = new Schema({
     title: {
         type: String,
         required: true,
         trim: true
     },
-    description: {
+    startDate: {
+        type: Date,
+        required: true,
+        trim: true
+    },
+    endDate: {
+        type: Date,
+        required: true,
+        trim: true
+    },
+    image: {
         type: String,
         required: true,
         trim: true
-    },
-    category: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    duration: {
-        type: Number,
-        required: true,
-        trim: true
-    },
-    goal: {
-        type: Number,
-        required: true,
-        trim: true
-    },
-    pledged: {
-        type: Number,
-        required: true,
-        trim: true,
-        default: 0
-    },
-    comments: {
-        type: Array,
-    },
-    supporters: {
-        type: Array,
     },
     createdAt: {
-        type: String,
+        type: Date,
         default: new Date()
     }
 })
-const campaignSchema = mongoose.model('campaigns', campaign);
+const auctionSchema = mongoose.model('auctions', auctions);
 
 
-
-module.exports = { authSchema, campaignSchema }
+module.exports = { auctionSchema }

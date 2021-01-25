@@ -1,130 +1,36 @@
-const express = require('express');
-const {
-    googleAuthModel,
-    facebookAuthModel,
-    addAccountDetailsModel,
-    getAccountDetailsModel,
-    createCampaignModel,
-    getCampaignsModel,
-    getSingleCampaignsModel,
-    getUserCampaignsModel,
-    createCampaignsCommentModel,
-    createCampaignsSupporterModel,
-} = require('../models');
+const { createAuctionModel, getAuctionModel } = require('../models');
+const path = require('path')
+var multer = require('multer')
 
+var storage = multer.diskStorage({
+    destination: 'uploads',
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    }
+})
+var upload = multer({ storage: storage }).single('image')
 
-
-
-
-
-const googleAuthController = (req, res) => {
-    googleAuthModel(req.body, result => {
-        // console.log(JSON.stringify(result));
-        if (result.status) {
-            return res.json({ result });
+//Create Auction
+const CreateAuctionController = (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            return res.json({ err });
         } else {
-            return res.status(400).json({ result });
+            const data = { ...req.body, image: req.file.filename }
+            return createAuctionModel(data, (result) => {
+                if (result.status) {
+                    return res.json({ result });
+                } else {
+                    return res.status(200).json({ result });
+                }
+            });
         }
-    });
+    })
 }
 
-const facebookAuthController = (req, res) => {
-    facebookAuthModel(req.body, result => {
-        //console.log(JSON.stringify(result));
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-
-//Add Account Details
-const addAccountDetailsController = (req, res) => {
-    addAccountDetailsModel(req.body, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-
-//Get Account Details
-
-const getAccountDetailsController = (req, res) => {
-    getAccountDetailsModel(req.params, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-
-
-//Create a campaign
-const createCampaignController = (req, res) => {
-    createCampaignModel(req.body, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-//Get all campaigns
-const getCampaignsController = (req, res) => {
-    getCampaignsModel(req.params, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-//Get single campaigns
-const getSingleCampaignsController = (req, res) => {
-    getSingleCampaignsModel(req.params, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-
-//Get User campaigns
-const getUserCampaignsController = (req, res) => {
-    getUserCampaignsModel(req.params, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-//Create Campaign Comment 
-const createCampaignsCommentController = (req, res) => {
-    createCampaignsCommentModel(req.body, result => {
-        if (result.status) {
-            return res.json({ result });
-        } else {
-            return res.status(400).json({ result });
-        }
-    });
-}
-
-//Create Campaign Supporter
-const createCampaignsSupporterController = (req, res) => {
-    createCampaignsSupporterModel(req.body, result => {
+//Get Auctions
+const getAuctionController = (req, res) => {
+    return getAuctionModel(result => {
         if (result.status) {
             return res.json({ result });
         } else {
@@ -136,16 +42,8 @@ const createCampaignsSupporterController = (req, res) => {
 
 
 module.exports = {
-    googleAuthController,
-    facebookAuthController,
-    addAccountDetailsController,
-    getAccountDetailsController,
-    createCampaignController,
-    getCampaignsController,
-    getSingleCampaignsController,
-    getUserCampaignsController,
-    createCampaignsCommentController,
-    createCampaignsSupporterController,
+    CreateAuctionController,
+    getAuctionController
 };
    
 
